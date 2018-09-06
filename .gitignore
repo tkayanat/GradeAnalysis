@@ -1,23 +1,134 @@
-# Compiled class file
-*.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+ import java.util.*;  	
+ import java.io.*;
+ /**
+  * Grade Analyzer is used to calculate and find the minimum value, 
+  * maximum value, average, and standard deviation of a given
+  * set of numbers.
+  *	  	
+  * @author (kayanat)
+  * @version (03.16.18)
+  */  	
+ /**  	
+  * Class used to calculate and print all values needed using the test 	
+  * scores given
+  * @author kayanat
+  * @version 03.16.18
+  * @return the minimum value, maximum value, average, and standard
+  * deviation of values in an array
+  */
+ public class GradeAnalyzer
+ {
+     //where the values of the array are stored
+     private int [] scores;
+     /**
+      * Method used to use the array to make calculations
+      */
+     public GradeAnalyzer()
+     {
+         scores = new int[30]; //capacity of array
+     }
+     /**
+      * Method used to record the data into the array to be 
+      * used for calculations
+      */
+     public static void analyze() throws FileNotFoundException
+     {
+         GradeAnalyzer classes = new GradeAnalyzer();
+         int count = 0;
+         int [] storage = classes.scores;
+         try
+         {
+             Scanner scan = new Scanner(new FileReader("testGrades.txt"));
+             while (scan.hasNextInt())
+             {
+                 storage[count] = (scan.nextInt());
+                 count++;
+             }
+             scan.close();
+         }
+         catch (FileNotFoundException e)
+         {
+             System.out.println(e);
+         }
+         System.out.println("Min grade: " + getMin(storage));
+         System.out.println("Max grade: " + getMax(storage));
+         System.out.printf("Average Grade: %.2f\n", getAverage(storage));
+         System.out.printf("Standard Deviation: %.2f\n" ,
+             +getStandardDeviation(storage));
+     }	
+     /**
+      * Method to find the minimum value for the given set of numbers.
+      * @param scores the array to be searched
+      * @return the minimum value in the array
+      */
+     public static int getMin(int [] scores)
+     {
+         int min = scores[0];
+         //makes the smallest integer first before comparison
+         for (int i = 0; i < scores.length; i++)
+         {
+             if (min > scores[i])
+                 min = scores[i];
+         }
+         return min;
+     }
+     /**
+      * Method to find the maximum value for the given set of numbers.
+      * @param scores the array to be searched
+      * @return the maximum value in the array
+      */
+     public static int getMax(int [] scores)
+     {
+         int max = scores[0];
+         //makes the largest integer first before comparison
+         for (int i = 0; i < scores.length; i++)
+         {
+             if (scores[i] > max)
+                 max = scores[i];
+         }
+         return max;
+     }	
+     /**
+      * Method to calculate the average for the given set of numbers.
+      * @param scores the array to be searched
+      * @return the average for the values in the array
+      */	
+     public static float getAverage(int [] scores)
+     {
+         int sum = 0;
+         float length = scores.length;
+         for (int i = 0; i < length; i++)
+             sum += scores[i];
+         float average = sum / length;
+         return average; 
+     }	
+     /**
+      * Method to calculate the standard deviation for the given set 
+      * of numbers.
+      * @param scores the array to be searched
+      * @return the standard deviation of the values in the array
+      */
+     public static float getStandardDeviation(int[] scores)
+     {
+         float sum = 0;
+         float avg = getAverage(scores);
+         for (int i = 0; i < scores.length; i++)
+         {
+             float gradeDifference = scores[i] - avg;
+             float squared = (float) Math.pow(gradeDifference, 2);
+             sum += squared;
+         }
+         float variance = sum / (scores.length - 1);
+         float standardDeviation = (float) Math.sqrt(variance);
+         return standardDeviation;
+     }  	
+     /**  	
+      * Method used to run the Grade Analyzer and find the values.
+      * @param args the command line arguments
+      */
+     public static void main(String[] args) throws FileNotFoundException
+     {
+         GradeAnalyzer main = new GradeAnalyzer();
+         main.analyze();
+     }
+ }
